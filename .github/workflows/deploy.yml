@@ -10,12 +10,15 @@ env:
 jobs:
   test:
     environment: testing
+    # when running job in the runner
     runs-on: ubuntu-latest
-    container:
-      image: node:16
+    # to run job in a container
+    # container:
+    #   image: node:16
     env:
       MONGODB_CONNECTION_PROTOCOL: mongodb
-      MONGODB_CLUSTER_ADDRESS: mongodb
+      # MONGODB_CLUSTER_ADDRESS: mongodb # in the case if it is runnig in a container, the bridge is automatically done just by giving the name in the services > mongodb
+      MONGODB_CLUSTER_ADDRESS: 127.0.0.1:27017 # in the case of the runner machine, we need to specify the port that will do the bridge between the service and the runner
       MONGODB_USERNAME: root
       MONGODB_PASSWORD: example
       PORT: 8080
@@ -25,7 +28,7 @@ jobs:
         env:
           MONGO_INITDB_ROOT_USERNAME: root
           MONGO_INITDB_ROOT_PASSWORD: example
-        ports:
+        ports: # in the case of the runner, we should specify the ports that will do the bridge between the service container and the runner machine
           - 27017:27017
     steps:
       - name: Get Code
